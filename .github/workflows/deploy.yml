@@ -30,6 +30,9 @@ jobs:
           source: "build/libs/*.jar"
           target: "/home/csh980116/shblog"
 
+      - name: Generate .env file from secret
+        run: echo "${{ secrets.ENV_FILE_CONTENT }}" > .env
+
       - name: Copy .env to server
         uses: appleboy/scp-action@v0.1.4
         with:

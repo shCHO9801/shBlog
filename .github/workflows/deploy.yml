@@ -28,7 +28,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/shblog"
+          target: "/home/csh980116/shblog"
 
       - name: Copy .env to server
         uses: appleboy/scp-action@v0.1.4
@@ -37,7 +37,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: ".env"
-          target: "/home/ubuntu/shblog"
+          target: "/home/csh980116/shblog"
 
       - name: SSH & Deploy with Docker Compose
         uses: appleboy/ssh-action@master

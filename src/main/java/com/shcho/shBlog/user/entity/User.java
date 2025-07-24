@@ -3,7 +3,6 @@ package com.shcho.shBlog.user.entity;
 import com.shcho.shBlog.common.entity.BaseEntity;
 import com.shcho.shBlog.libs.exception.CustomException;
 import com.shcho.shBlog.libs.exception.ErrorCode;
-import com.shcho.shBlog.user.dto.UserSignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

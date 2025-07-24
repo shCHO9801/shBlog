@@ -3,6 +3,7 @@ package com.shcho.shBlog.user.entity;
 import com.shcho.shBlog.common.entity.BaseEntity;
 import com.shcho.shBlog.libs.exception.CustomException;
 import com.shcho.shBlog.libs.exception.ErrorCode;
+import com.shcho.shBlog.user.dto.UserSignUpRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,16 @@ public class User extends BaseEntity {
 
     @Column
     private LocalDateTime deletedAt;
+
+    public static User of(String username, String encodedPassword, String nickname, String email) {
+        return User.builder()
+                .username(username)
+                .password(encodedPassword)
+                .nickname(nickname)
+                .email(email)
+                .role(Role.USER)
+                .build();
+    }
 
     public void updateUsername(String username) {
         this.username = username;

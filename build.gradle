@@ -51,7 +51,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def querydslDir = "src/main/generated"
+def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
 	main.java.srcDirs += querydslDir
@@ -59,4 +59,8 @@ sourceSets {
 
 tasks.withType(JavaCompile).configureEach {
 	options.annotationProcessorGeneratedSourcesDirectory = file(querydslDir)
+}
+
+tasks.named('compileJava') {
+	options.annotationProcessorPath = configurations.annotationProcessor
 }

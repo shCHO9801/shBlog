@@ -44,6 +44,16 @@ public class User extends BaseEntity {
     @Column
     private LocalDateTime deletedAt;
 
+    public static User of(String username, String encodedPassword, String nickname, String email) {
+        return User.builder()
+                .username(username)
+                .password(encodedPassword)
+                .nickname(nickname)
+                .email(email)
+                .role(Role.USER)
+                .build();
+    }
+
     public void updateUsername(String username) {
         this.username = username;
     }

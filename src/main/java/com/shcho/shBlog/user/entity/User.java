@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     private String email;
 
     @Column
-    String profileImageUrl;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(50)")

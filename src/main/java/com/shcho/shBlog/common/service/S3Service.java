@@ -24,6 +24,9 @@ public class S3Service {
     @Value("${minio.bucket}")
     private String bucket;
 
+    @Value("${custom.s3.url}")
+    private String minioBaseUrl;
+
     public FileUploadResponseDto uploadByType(MultipartFile file, String type, String username) {
         if ("image".equalsIgnoreCase(type)) {
             return uploadImage(file, type, username);
@@ -61,7 +64,7 @@ public class S3Service {
                             .build()
             );
 
-            String url = String.format("https://minio-api.csh980116.synology.me/shblog/%s", fileName);
+            String url = String.format("%s/%s/%s", minioBaseUrl, bucket, fileName);
             return FileUploadResponseDto.from(url);
         } catch (Exception e) {
             log.error("[Minio] 파일 업로드 실패:", e);

@@ -4,12 +4,14 @@ import com.shcho.shBlog.common.dto.FileUploadResponseDto;
 import com.shcho.shBlog.libs.exception.CustomException;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.util.UUID;
 
 import static com.shcho.shBlog.libs.exception.ErrorCode.*;
@@ -34,6 +36,31 @@ public class S3Service {
             return uploadFile(file, type, username);
         } else {
             throw new CustomException(INVALID_FILE_TYPE);
+        }
+    }
+
+    public void deleteFileByUrl(String imageUrl) {
+        try {
+            URI uri = URI.create(imageUrl);
+            String path = uri.getPath();
+            String[] parts = path.split("/", 3);
+
+            if (parts.length < 3) {
+                throw new CustomException(INVALID_FILE_URL);
+            }
+
+            String bucketName = parts[1];
+            String objectName = parts[2];
+
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
+            log.info("[Minio] 파일 삭제 성공: {}", objectName);
+        } catch (Exception e) {
+            log.error("[Minio] 파일 삭제 실패: {}", e.getMessage());
         }
     }
 

@@ -20,6 +20,7 @@ public enum ErrorCode {
     INVALID_IMAGE_FORMAT(400, "FILE_001", "이미지 형식이 올바르지 않습니다. (jpg/jpeg/png/gif)"),
     INVALID_FILE_FORMAT(400, "FILE_002", "파일 형식이 올바르지 않습니다."),
     INVALID_FILE_TYPE(400, "FILE_003", "파일 타입이 잘못되었습니다."),
+    INVALID_FILE_URL(400, "FILE_004" , "파일 url이 잘못되었습니다." ),
 
     /* 401 UNAUTHORIZED */
     INVALID_USERNAME_OR_PASSWORD(401, "AUTH_001", "아이디 또는 비밀번호가 올바르지 않습니다."),

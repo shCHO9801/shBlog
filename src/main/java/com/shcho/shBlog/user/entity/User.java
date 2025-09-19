@@ -74,6 +74,10 @@ public class User extends BaseEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
+    public void deleteProfileImageUrl() {
+        this.profileImageUrl = null;
+    }
+
     public void withdraw() {
         if (this.deletedAt != null) {
             throw new CustomException(ErrorCode.ALREADY_DELETED_USER);

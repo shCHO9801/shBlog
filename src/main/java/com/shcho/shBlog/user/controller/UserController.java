@@ -49,5 +49,24 @@ public class UserController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    @PatchMapping("/profile")
+    public ResponseEntity<String> updateProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UserProfileRequestDto requestDto
+    ) {
+        Long userId = userDetails.getUser().getUserId();
+        userService.updateProfileImage(userId, requestDto.profileImageUrl());
+        return ResponseEntity.ok("프로필 이미지 등록 완료");
+    }
+
+    @DeleteMapping("/profile")
+    public ResponseEntity<String> deleteProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        Long userId = userDetails.getUser().getUserId();
+        userService.deleteProfileImage(userId);
+        return ResponseEntity.ok("프로필 이미지 삭제 완료");
+    }
 }
 

@@ -1,6 +1,5 @@
 package com.shcho.shBlog.user.service;
 
-import com.shcho.shBlog.common.service.S3Service;
 import com.shcho.shBlog.common.util.JwtProvider;
 import com.shcho.shBlog.libs.exception.CustomException;
 import com.shcho.shBlog.user.dto.UserSignInRequestDto;
@@ -22,7 +21,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
-    private final S3Service s3Service;
 
     @Transactional
     public User signUp(@Valid UserSignUpRequestDto requestDto) {
@@ -74,31 +72,6 @@ public class UserService {
         return !passwordEncoder.matches(password, user.getPassword());
     }
 
-    @Transactional
-    public void updateProfileImage(Long userId, String newImageUrl) {
-        User user = userRepository.getReferenceById(userId);
-
-        deleteOldImageUrl(user);
-
-        user.updateProfileImageUrl(newImageUrl);
-    }
-
-    @Transactional
-    public void deleteProfileImage(Long userId) {
-        User user = userRepository.getReferenceById(userId);
-
-        deleteOldImageUrl(user);
-
-        user.deleteProfileImageUrl();
-    }
-
-    private void deleteOldImageUrl(User user) {
-        String oldImageUrl = user.getProfileImageUrl();
-
-        if(oldImageUrl != null && !oldImageUrl.isBlank()) {
-            s3Service.deleteFileByUrl(oldImageUrl);
-        }
-    }
 
     public String getUserToken(User user) {
         return jwtProvider.createToken(user.getUsername(), user.getRole());

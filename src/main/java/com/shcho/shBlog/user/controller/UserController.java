@@ -50,7 +50,7 @@ public class UserController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PutMapping("/profile")
+    @PatchMapping("/profile")
     public ResponseEntity<String> updateProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody UserProfileRequestDto requestDto

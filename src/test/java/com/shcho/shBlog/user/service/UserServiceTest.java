@@ -1,11 +1,8 @@
 package com.shcho.shBlog.user.service;
 
-import com.shcho.shBlog.common.service.S3Service;
 import com.shcho.shBlog.libs.exception.CustomException;
-import com.shcho.shBlog.libs.exception.ErrorCode;
 import com.shcho.shBlog.user.dto.UserSignInRequestDto;
 import com.shcho.shBlog.user.dto.UserSignUpRequestDto;
-import com.shcho.shBlog.user.entity.Role;
 import com.shcho.shBlog.user.entity.User;
 import com.shcho.shBlog.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.shcho.shBlog.libs.exception.ErrorCode.*;
 import static com.shcho.shBlog.user.entity.Role.USER;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @DisplayName("User Service Unit Test")

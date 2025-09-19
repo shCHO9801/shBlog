@@ -46,5 +46,5 @@ public class MyPageController {
         return ResponseEntity.ok("프로필 이미지 삭제 완료");
     }
 
-
+    // TODO :
 }

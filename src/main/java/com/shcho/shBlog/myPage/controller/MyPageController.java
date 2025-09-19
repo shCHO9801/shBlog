@@ -1,6 +1,7 @@
 package com.shcho.shBlog.myPage.controller;
 
 import com.shcho.shBlog.auth.CustomUserDetails;
+import com.shcho.shBlog.myPage.dto.UserPasswordUpdateRequestDto;
 import com.shcho.shBlog.myPage.service.MyPageService;
 import com.shcho.shBlog.myPage.dto.UserInfoResponseDto;
 import com.shcho.shBlog.user.dto.UserProfileRequestDto;
@@ -46,5 +47,32 @@ public class MyPageController {
         return ResponseEntity.ok("프로필 이미지 삭제 완료");
     }
 
-    // TODO :
+    @GetMapping("/nickname/check")
+    public ResponseEntity<Boolean> checkNickname(
+            @RequestParam String nickname
+    ) {
+        boolean exists = myPageService.existsByNickname(nickname);
+        return ResponseEntity.ok(exists);
+    }
+
+    @PatchMapping("/nickname")
+    public ResponseEntity<String> updateNickname(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String nickname
+    ) {
+        Long userId = userDetails.getUser().getUserId();
+        myPageService.updateNickname(userId, nickname);
+
+        return ResponseEntity.ok("닉네임 변경이 완료 되었습니다.");
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<String> updatePassword(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UserPasswordUpdateRequestDto requestDto
+            ) {
+        Long userId = userDetails.getUser().getUserId();
+        myPageService.updatePassword(userId, requestDto.currentPassword(), requestDto.newPassword());
+        return ResponseEntity.ok("비밀번호 변경이 완료 되었습니다.");
+    }
 }

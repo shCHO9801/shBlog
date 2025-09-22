@@ -1,4 +1,4 @@
-package com.shcho.shBlog.user.dto;
+package com.shcho.shBlog.myPage.dto;
 
 import com.shcho.shBlog.user.entity.User;
 

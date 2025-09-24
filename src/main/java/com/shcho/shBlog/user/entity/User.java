@@ -1,5 +1,6 @@
 package com.shcho.shBlog.user.entity;
 
+import com.shcho.shBlog.category.entity.Category;
 import com.shcho.shBlog.common.entity.BaseEntity;
 import com.shcho.shBlog.libs.exception.CustomException;
 import com.shcho.shBlog.libs.exception.ErrorCode;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -40,6 +42,10 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(50)")
     private Role role;
+
+    // 추후 유저 탈퇴 고려 시 cascade = CascadeType.ALL, orphanRemoval = true 옵션 추가
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Category> categories;
 
     @Column
     private LocalDateTime deletedAt;
@@ -90,5 +96,10 @@ public class User extends BaseEntity {
 
     public boolean isDeleted() {
         return this.deletedAt != null;
+    }
+
+    public void addCategory(Category category) {
+        categories.add(category);
+        category.setUser(this);
     }
 }

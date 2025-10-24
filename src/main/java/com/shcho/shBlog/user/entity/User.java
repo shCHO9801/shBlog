@@ -97,9 +97,4 @@ public class User extends BaseEntity {
     public boolean isDeleted() {
         return this.deletedAt != null;
     }
-
-    public void addCategory(Category category) {
-        categories.add(category);
-        category.setUser(this);
-    }
 }

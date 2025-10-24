@@ -1,5 +1,6 @@
 package com.shcho.shBlog.user.entity;
 
+import com.shcho.shBlog.category.entity.Category;
 import com.shcho.shBlog.common.entity.BaseEntity;
 import com.shcho.shBlog.libs.exception.CustomException;
 import com.shcho.shBlog.libs.exception.ErrorCode;
@@ -10,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Builder
@@ -35,11 +37,15 @@ public class User extends BaseEntity {
     private String email;
 
     @Column
-    String profileImageUrl;
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "VARCHAR(50)")
     private Role role;
+
+    // 추후 유저 탈퇴 고려 시 cascade = CascadeType.ALL, orphanRemoval = true 옵션 추가
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Category> categories;
 
     @Column
     private LocalDateTime deletedAt;
@@ -72,6 +78,10 @@ public class User extends BaseEntity {
 
     public void updateProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public void deleteProfileImageUrl() {
+        this.profileImageUrl = null;
     }
 
     public void withdraw() {

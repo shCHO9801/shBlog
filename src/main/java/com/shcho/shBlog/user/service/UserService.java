@@ -72,6 +72,7 @@ public class UserService {
         return !passwordEncoder.matches(password, user.getPassword());
     }
 
+
     public String getUserToken(User user) {
         return jwtProvider.createToken(user.getUsername(), user.getRole());
     }

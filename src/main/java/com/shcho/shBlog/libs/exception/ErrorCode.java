@@ -15,11 +15,25 @@ public enum ErrorCode {
     DUPLICATED_USERNAME(409, "USER_003", "이미 사용 중인 아이디 입니다."),
     DUPLICATED_EMAIL(409, "USER_004", "이미 사용 중인 이메일입니다."),
     DUPLICATED_NICKNAME(409, "USER_005", "이미 사용 중인 닉네임입니다."),
+    DUPLICATE_CATEGORY_NAME(409, "CATEGORY_001", "이미 사용 중인 카테고리명입니다."),
+
+    /* 400 BAD_REQUEST */
+    INVALID_IMAGE_FORMAT(400, "FILE_001", "이미지 형식이 올바르지 않습니다. (jpg/jpeg/png/gif)"),
+    INVALID_FILE_FORMAT(400, "FILE_002", "파일 형식이 올바르지 않습니다."),
+    INVALID_FILE_TYPE(400, "FILE_003", "파일 타입이 잘못되었습니다."),
+    INVALID_FILE_URL(400, "FILE_004" , "파일 url이 잘못되었습니다." ),
 
     /* 401 UNAUTHORIZED */
     INVALID_USERNAME_OR_PASSWORD(401, "AUTH_001", "아이디 또는 비밀번호가 올바르지 않습니다."),
 
+    /* 403 FORBIDDEN */
+    FORBIDDEN_CATEGORY_DELETE(403, "CATEGORY_002", "해당 카테고리를 삭제할 권한이 없습니다."),
+
+    /* 404 NOT_FOUND */
+    CATEGORY_NOT_FOUND(404, "CATEGORY_003", "요청한 카테고리를 찾을 수 없습니다."),
+
     /* 500 INTERNAL_SERVER_ERROR */
+    FILE_UPLOAD_FAIL(500, "FILE_500", "파일 업로드에 실패했습니다."),
     INTERNAL_SERVER_ERROR(500, "COMMON_500", "서버 오류가 발생했습니다."),
     JWT_KEY_ERROR(500, "AUTH_500", "JWT 키가 유효하지 않습니다.");
 

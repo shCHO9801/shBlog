@@ -1,0 +1,124 @@
+package com.shcho.shBlog.common.service;
+
+import com.shcho.shBlog.common.dto.FileUploadResponseDto;
+import com.shcho.shBlog.libs.exception.CustomException;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.net.URI;
+import java.util.UUID;
+
+import static com.shcho.shBlog.libs.exception.ErrorCode.*;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class S3Service {
+
+    private final MinioClient minioClient;
+
+    @Value("${minio.bucket}")
+    private String bucket;
+
+    @Value("${custom.s3.url}")
+    private String minioBaseUrl;
+
+    public FileUploadResponseDto uploadByType(MultipartFile file, String type, String username) {
+        if ("image".equalsIgnoreCase(type)) {
+            return uploadImage(file, type, username);
+        } else if ("file".equalsIgnoreCase(type)) {
+            return uploadFile(file, type, username);
+        } else {
+            throw new CustomException(INVALID_FILE_TYPE);
+        }
+    }
+
+    public void deleteFileByUrl(String imageUrl) {
+        try {
+            URI uri = URI.create(imageUrl);
+            String path = uri.getPath();
+            String[] parts = path.split("/", 3);
+
+            if (parts.length < 3) {
+                throw new CustomException(INVALID_FILE_URL);
+            }
+
+            String bucketName = parts[1];
+            String objectName = parts[2];
+
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
+            log.info("[Minio] 파일 삭제 성공: {}", objectName);
+        } catch (Exception e) {
+            log.error("[Minio] 파일 삭제 실패: {}", e.getMessage());
+        }
+    }
+
+    private FileUploadResponseDto uploadImage(MultipartFile file, String dir, String username) {
+        validateImageExtension(file);
+        return upload(file, dir, username);
+    }
+
+    private FileUploadResponseDto uploadFile(MultipartFile file, String dir, String username) {
+        // TODO : 필요시 일반 파일 확장자 검증 추가
+        return upload(file, dir, username);
+    }
+
+    private FileUploadResponseDto upload(MultipartFile file, String dir, String username) {
+        try {
+            String originalFilename = file.getOriginalFilename();
+            String fileExtension = getFileExtension(originalFilename);
+
+            String uuid = UUID.randomUUID().toString();
+            String fileName = String.format("%s/%s-%s%s", dir, username, uuid, fileExtension);
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucket)
+                            .object(fileName)
+                            .stream(file.getInputStream(), file.getSize(), -1L)
+                            .contentType(file.getContentType())
+                            .build()
+            );
+
+            String url = String.format("%s/%s/%s", minioBaseUrl, bucket, fileName);
+            return FileUploadResponseDto.from(url);
+        } catch (Exception e) {
+            log.error("[Minio] 파일 업로드 실패:", e);
+            throw new CustomException(FILE_UPLOAD_FAIL);
+        }
+    }
+
+    private void validateImageExtension(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null) {
+            throw new CustomException(INVALID_IMAGE_FORMAT);
+        }
+
+        String ext = getFileExtension(originalFilename).toLowerCase();
+
+        // 허용된 이미지 확장자
+        if (!(ext.equals(".jpg") || ext.equals(".jpeg") || ext.equals(".png") || ext.equals(".gif"))) {
+            throw new CustomException(INVALID_IMAGE_FORMAT);
+        }
+    }
+
+
+    private String getFileExtension(String originalFilename) {
+        if (originalFilename == null || !originalFilename.contains(".")) {
+            throw new CustomException(INVALID_FILE_FORMAT);
+        }
+        return originalFilename.substring(originalFilename.lastIndexOf("."));
+    }
+
+}

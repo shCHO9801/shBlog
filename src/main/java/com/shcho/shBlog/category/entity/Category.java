@@ -19,7 +19,7 @@ public class Category extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(nullable = false, length = 50)
     private String name;
 
     private String description;
@@ -28,10 +28,11 @@ public class Category extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    /**
-     * 연관관계 편의 메서드(User.addCategory)를 통해서만 사용해야 한다.
-     */
-    public void setUser(User user) {
-        this.user = user;
+    public static Category of(User user, String name, String description) {
+        return Category.builder()
+                .user(user)
+                .name(name)
+                .description(description)
+                .build();
     }
 }

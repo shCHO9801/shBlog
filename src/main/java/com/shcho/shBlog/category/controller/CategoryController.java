@@ -1,6 +1,7 @@
 package com.shcho.shBlog.category.controller;
 
 import com.shcho.shBlog.auth.CustomUserDetails;
+import com.shcho.shBlog.category.dto.CategoryResponseDto;
 import com.shcho.shBlog.category.dto.CreateCategoryRequestDto;
 import com.shcho.shBlog.category.dto.CreateCategoryResponseDto;
 import com.shcho.shBlog.category.entity.Category;
@@ -32,11 +33,14 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories(
+    public ResponseEntity<List<CategoryResponseDto>> getAllCategories(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         User user = userDetails.getUser();
-        List<Category> categories = categoryService.getAllCategories(user);
+        List<CategoryResponseDto> categories = categoryService.getAllCategories(user)
+                .stream()
+                .map(CategoryResponseDto::from)
+                .toList();
 
         return ResponseEntity.ok(categories);
     }

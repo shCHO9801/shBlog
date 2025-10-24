@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MyPageController {
 
-    private MyPageService myPageService;
+    private final MyPageService myPageService;
 
     @GetMapping
     public ResponseEntity<UserInfoResponseDto> getMyPage(
